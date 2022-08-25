@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import com.example.messagingrabbitmq.errorhandle.ErrorHandleProducer;
 import com.example.messagingrabbitmq.fanout.FanoutProducer;
 import com.example.messagingrabbitmq.routing.RoutingProducer;
 import com.example.messagingrabbitmq.simplejson.SimpleJsonProducer;
@@ -24,12 +25,16 @@ public class Runner implements CommandLineRunner {
 	@Autowired
 	private RoutingProducer routingProducer;
 
+	@Autowired
+	private ErrorHandleProducer errorHandleProducer;
+
 	@Override
 	public void run(String... args) throws Exception {
 		simpleJsonProducer.doWork();
 		workQueueProducer.doWork();
 		fanoutProducer.doWork();
 		routingProducer.doWork();
+		errorHandleProducer.doWork();
 	}
 
 }
