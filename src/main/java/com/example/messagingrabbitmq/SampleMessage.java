@@ -1,4 +1,4 @@
-package com.example.messagingrabbitmq.simplejson;
+package com.example.messagingrabbitmq;
 
 public class SampleMessage {
 
