@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.QueueBuilder;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -20,12 +21,22 @@ public class ErrorHandleProducer {
 
 	static final String queueName = "error-handle";
 
+	static final String deadLetterQueueName = queueName + "-dlq";
+
 	@Autowired
 	private RabbitTemplate rabbitTemplate;
-
+	
 	@Bean(name = queueName)
 	Queue queue() {
-		return new Queue(queueName, false, false, true);
+		return QueueBuilder.nonDurable(queueName).autoDelete()
+		.deadLetterExchange("") // The empty string denotes the default or nameless exchange: messages are routed to the queue with the name specified by routingKey
+		.deadLetterRoutingKey(deadLetterQueueName)
+		.build();
+	}
+
+	@Bean(name = deadLetterQueueName)
+	Queue deadLetterQueue() {
+		return new Queue(deadLetterQueueName, false, false, true);
 	}
 
 	public void doWork() throws Exception {
