@@ -25,11 +25,6 @@ public class QuorumProducer {
 	private RabbitTemplate rabbitTemplate;
 
 	@Bean(name = queueName)
-	Queue queue() {
-		return new Queue(queueName, true);
-	}
-
-	@Bean(name = queueName)
 	Queue quorumQueue() {
 		Map<String, Object> arguments = new HashMap<>();
 		arguments.put("x-queue-type", "quorum");
